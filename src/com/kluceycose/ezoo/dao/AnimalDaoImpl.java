@@ -14,6 +14,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
 import com.kluceycose.ezoo.model.Animal;
 
 public class AnimalDaoImpl implements AnimalDAO {
@@ -25,7 +29,8 @@ public class AnimalDaoImpl implements AnimalDAO {
 		Statement stmt = null;
 
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 
 			stmt = connection.createStatement();
 
@@ -54,9 +59,11 @@ public class AnimalDaoImpl implements AnimalDAO {
 				a.setHealthStatus(rs.getString("healthstatus"));
 				
 				a.setFeedingScheduleId(rs.getLong("feeding_schedule"));
-				a.setFeedingSchedule(DAOUtilities.getFeedingScheduleDao().getFeedingSchedule(a));
+				a.setFeedingSchedule(((FeedingScheduleDAO)context.getBean(FeedingScheduleDAO.class)).getFeedingSchedule(a));
 				
 				animals.add(a);
+				
+				((AbstractApplicationContext) context).close();
 			}
 
 		} catch (SQLException e) {
@@ -84,7 +91,8 @@ public class AnimalDaoImpl implements AnimalDAO {
 		int success = 0;
 
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			String sql = "INSERT INTO ANIMALS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,null)";
 
 			// Setup PreparedStatement
@@ -109,6 +117,8 @@ public class AnimalDaoImpl implements AnimalDAO {
 			stmt.setString(13, animal.getHealthStatus());
 			
 			success = stmt.executeUpdate();
+			
+			((AbstractApplicationContext) context).close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

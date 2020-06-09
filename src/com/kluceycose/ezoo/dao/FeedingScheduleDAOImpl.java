@@ -8,6 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
 import com.kluceycose.ezoo.model.Animal;
 import com.kluceycose.ezoo.model.FeedingSchedule;
 
@@ -22,7 +26,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 		int success = 0;
 		
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			String sql = "INSERT INTO feeding_schedules VALUES (?,?,?,?,?,?)";
 			
 			statement = connection.prepareStatement(sql);
@@ -36,6 +41,7 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 			statement.setString(6, scheduleToAdd.getName());
 			
 			success = statement.executeUpdate();
+			((AbstractApplicationContext) context).close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -65,7 +71,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 		List<FeedingSchedule> schedules = new ArrayList<>();
 		
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			String sql = "SELECT * FROM feeding_schedules";
 			
 			statement = connection.createStatement();
@@ -83,6 +90,7 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 				fs.setName(rs.getString("name"));
 				
 				schedules.add(fs);
+				((AbstractApplicationContext) context).close();
 			}
 			
 		}
@@ -110,7 +118,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 		FeedingSchedule schedule = new FeedingSchedule();
 		
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			String sql = "SELECT * FROM feeding_schedules WHERE schedule_id = ?";
 			
 			statement = connection.prepareStatement(sql);
@@ -127,6 +136,7 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 				schedule.setNotes(rs.getString("notes"));
 				schedule.setName(rs.getString("name"));
 			}
+			((AbstractApplicationContext) context).close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -151,7 +161,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 		int success = 0;
 		
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			String sql = "UPDATE feeding_schedules SET feeding_time = ?, recurrence = ?, food = ?, notes = ?, name = ? WHERE schedule_id = ?";
 			
 			statement = connection.prepareStatement(sql);
@@ -163,8 +174,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 			statement.setString(5, updatedSchedule.getName());
 			statement.setLong(6, updatedSchedule.getScheduleId());
 			
-			
 			success = statement.executeUpdate();
+			((AbstractApplicationContext) context).close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -194,7 +205,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 		int success = 0;
 		
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			String sql;
 			
 			if(scheduleid < 0L) {
@@ -213,6 +225,7 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 			}
 			
 			success = statement.executeUpdate();
+			((AbstractApplicationContext) context).close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -242,7 +255,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 		int success = 0;
 		
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			String sql = "UPDATE animals SET feeding_schedule = null WHERE animalid = ?";
 			
 			statement = connection.prepareStatement(sql);
@@ -250,6 +264,7 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 			statement.setLong(1, animalid);
 			
 			success = statement.executeUpdate();
+			((AbstractApplicationContext) context).close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -280,7 +295,8 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 		int success2 = 0;
 		
 		try {
-			connection = DAOUtilities.getConnection();
+			ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+			connection = (Connection)context.getBean("getConnection");
 			
 			// Remove references to this feeding schedule from all animals
 			String sql = "UPDATE animals SET feeding_schedule = null WHERE feeding_schedule = ?";
@@ -298,7 +314,7 @@ public class FeedingScheduleDAOImpl implements FeedingScheduleDAO {
 			statement.setLong(1, scheduleidToDelete);
 			
 			success2 = statement.executeUpdate();
-			
+			((AbstractApplicationContext) context).close();
 		}
 		catch(Exception e){
 			e.printStackTrace();

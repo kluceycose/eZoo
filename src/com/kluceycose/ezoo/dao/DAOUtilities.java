@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 
 /**
  * Class used to retrieve DAO Implementations. Serves as a factory.
@@ -11,6 +14,8 @@ import java.sql.SQLException;
  * @author anon
  *
  */
+
+@Configuration
 public class DAOUtilities {
 
 	private static final String CONNECTION_USERNAME = "postgres";
@@ -21,7 +26,8 @@ public class DAOUtilities {
 	private static FeedingScheduleDAOImpl feedingScheduleDaoImpl;
 	private static Connection connection;
 
-	public static synchronized AnimalDAO getAnimalDao() {
+	@Bean
+	public AnimalDAO getAnimalDao() {
 
 		if (animalDaoImpl == null) {
 			animalDaoImpl = new AnimalDaoImpl();
@@ -29,14 +35,16 @@ public class DAOUtilities {
 		return animalDaoImpl;
 	}
 	
-	public static synchronized FeedingScheduleDAO getFeedingScheduleDao() {
+	@Bean
+	public FeedingScheduleDAO getFeedingScheduleDao() {
 		if(feedingScheduleDaoImpl == null) {
 			feedingScheduleDaoImpl = new FeedingScheduleDAOImpl();
 		}
 		return feedingScheduleDaoImpl;
 	}
 
-	static synchronized Connection getConnection() throws SQLException {
+	@Bean
+	public Connection getConnection() throws SQLException {
 		if (connection == null) {
 			try {
 				Class.forName("org.postgresql.Driver");

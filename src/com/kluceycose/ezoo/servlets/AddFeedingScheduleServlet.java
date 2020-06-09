@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
 import com.kluceycose.ezoo.dao.DAOUtilities;
 import com.kluceycose.ezoo.dao.FeedingScheduleDAO;
 import com.kluceycose.ezoo.model.FeedingSchedule;
@@ -38,7 +42,8 @@ public class AddFeedingScheduleServlet extends HttpServlet {
 		FeedingSchedule scheduleToSave = new FeedingSchedule(id, time, recurrence, food, notes, name);
 		
 		//Call DAO method
-		FeedingScheduleDAO dao = DAOUtilities.getFeedingScheduleDao();
+		ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+		FeedingScheduleDAO dao = (FeedingScheduleDAO)context.getBean(FeedingScheduleDAO.class);
 		
 		try {
 			if(update) {
@@ -71,6 +76,9 @@ public class AddFeedingScheduleServlet extends HttpServlet {
 			request.getSession().setAttribute("messageClass", "alert-danger");
 			
 			request.getRequestDispatcher("addFeedingSchedule.jsp").forward(request, response);
+		}
+		finally {
+			((AbstractApplicationContext) context).close();
 		}
 	}
 }

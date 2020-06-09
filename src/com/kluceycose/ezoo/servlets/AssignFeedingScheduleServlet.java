@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
 import com.kluceycose.ezoo.dao.AnimalDAO;
 import com.kluceycose.ezoo.dao.DAOUtilities;
 import com.kluceycose.ezoo.dao.FeedingScheduleDAO;
@@ -22,11 +26,15 @@ public class AssignFeedingScheduleServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//Use DAO methods to retrieve Animal and FeedingSchedule lists
-		AnimalDAO animalDao = DAOUtilities.getAnimalDao();
-		FeedingScheduleDAO scheduleDao = DAOUtilities.getFeedingScheduleDao();
+		ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+		AnimalDAO animalDao = (AnimalDAO)context.getBean(AnimalDAO.class);
+		FeedingScheduleDAO scheduleDao = (FeedingScheduleDAO)context.getBean(FeedingScheduleDAO.class);
 		
 		List<Animal> animalList = animalDao.getAllAnimals();
 		List<FeedingSchedule> scheduleList = scheduleDao.getAllFeedingSchedules();
+		
+		//Close the context
+		((AbstractApplicationContext) context).close();
 		
 		//Pass the lists to session variables
 		request.getSession().setAttribute("animals", animalList);
@@ -41,7 +49,8 @@ public class AssignFeedingScheduleServlet extends HttpServlet {
 		long scheduleId = Long.parseLong(request.getParameter("scheduleId"));
 		
 		//Call DAO method
-		FeedingScheduleDAO dao = DAOUtilities.getFeedingScheduleDao();
+		ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+		FeedingScheduleDAO dao = (FeedingScheduleDAO)context.getBean(FeedingScheduleDAO.class);
 		try {
 			dao.updateAnimalFeedingSchedule(animalId, scheduleId);
 			request.getSession().setAttribute("message", "Schedule successfully added to Animal");
@@ -56,6 +65,9 @@ public class AssignFeedingScheduleServlet extends HttpServlet {
 			request.getSession().setAttribute("messageClass", "alert-danger");
 			
 			request.getRequestDispatcher("assignSchedule.jsp").forward(request, response);
+		}
+		finally {
+			((AbstractApplicationContext) context).close();
 		}
 	}
 }

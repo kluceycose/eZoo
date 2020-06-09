@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
 import com.kluceycose.ezoo.dao.AnimalDAO;
 import com.kluceycose.ezoo.dao.DAOUtilities;
 import com.kluceycose.ezoo.model.Animal;
@@ -66,7 +70,8 @@ public class AddAnimalServlet extends HttpServlet {
 				healthStatus);
 		
 		//Call DAO method
-		AnimalDAO dao = DAOUtilities.getAnimalDao();
+		ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
+		AnimalDAO dao = (AnimalDAO)context.getBean(AnimalDAO.class);
 		try {
 			dao.saveAnimal(animalToSave);
 			request.getSession().setAttribute("message", "Animal successfully created");
@@ -92,6 +97,9 @@ public class AddAnimalServlet extends HttpServlet {
 			
 			request.getRequestDispatcher("addAnimal.jsp").forward(request, response);
 
+		}
+		finally {
+			((AbstractApplicationContext) context).close();
 		}
 	}
 
