@@ -10,7 +10,7 @@
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         
-        <mapping class="com.examples.ezoo.model.Animal" />
-        <mapping class="com.examples.ezoo.model.FeedingSchedule" />
+        <mapping resource="com.examples.ezoo.model.Animal.hbm.xml" />
+        <mapping resource="com.examples.ezoo.model.FeedingSchedule.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

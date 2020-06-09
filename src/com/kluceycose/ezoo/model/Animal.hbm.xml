@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.kluceycose.ezoo.model.Animal" table="ANIMAL">
+        <id name="animalID" type="long">
+            <column name="ANIMALID" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" />
+        </property>
+        <property name="taxKingdom" type="java.lang.String">
+            <column name="TAXKINGDOM" />
+        </property>
+        <property name="taxPhylum" type="java.lang.String">
+            <column name="TAXPHYLUM" />
+        </property>
+        <property name="taxClass" type="java.lang.String">
+            <column name="TAXCLASS" />
+        </property>
+        <property name="taxOrder" type="java.lang.String">
+            <column name="TAXORDER" />
+        </property>
+        <property name="taxFamily" type="java.lang.String">
+            <column name="TAXFAMILY" />
+        </property>
+        <property name="taxGenus" type="java.lang.String">
+            <column name="TAXGENUS" />
+        </property>
+        <property name="taxSpecies" type="java.lang.String">
+            <column name="TAXSPECIES" />
+        </property>
+        <property name="height" type="double">
+            <column name="HEIGHT" />
+        </property>
+        <property name="weight" type="double">
+            <column name="WEIGHT" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="healthStatus" type="java.lang.String">
+            <column name="HEALTHSTATUS" />
+        </property>
+        <many-to-one name="feedingSchedule" column="FEEDINGSCHEDULE" class="FeedingSchedule" />
+    </class>
+</hibernate-mapping>

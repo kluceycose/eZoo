@@ -14,7 +14,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
-import com.kluceycose.ezoo.dao.AnimalDAO;
 import com.kluceycose.ezoo.dao.DAOUtilities;
 import com.kluceycose.ezoo.dao.FeedingScheduleDAO;
 import com.kluceycose.ezoo.model.Animal;
@@ -31,8 +30,6 @@ public class FeedingScheduleServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//Get the list of Feeding Schedules and the list of Animals from the database
 		ApplicationContext context = new AnnotationConfigApplicationContext(DAOUtilities.class);
-		AnimalDAO animalDao = (AnimalDAO)context.getBean("getAnimalDao");
-		List<Animal> animals = animalDao.getAllAnimals();
 		
 		FeedingScheduleDAO scheduleDao = (FeedingScheduleDAO)context.getBean("getFeedingScheduleDao");
 		List<FeedingSchedule> schedules = scheduleDao.getAllFeedingSchedules();
@@ -41,13 +38,11 @@ public class FeedingScheduleServlet extends HttpServlet{
 		HashMap<FeedingSchedule, String> scheduledAnimals = new HashMap<>();
 		for(FeedingSchedule schedule: schedules) {
 			StringBuilder animalList = new StringBuilder("");
-			for(Animal animal: animals) {
-				if(animal.getFeedingScheduleId() == schedule.getScheduleId()) {
-					if(animalList.length() > 0) {
-						animalList.append(", ");
-					}
-					animalList.append(animal.getName());
+			for(Animal animal: schedule.getAssignedAnimals()) {
+				if(animalList.length() > 0) {
+					animalList.append(", ");
 				}
+				animalList.append(animal.getName());
 			}
 			scheduledAnimals.put(schedule, animalList.toString());
 		}

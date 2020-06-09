@@ -19,9 +19,7 @@ public class Animal{
 	private String type = "";
 	private String healthStatus = "";
 	
-	private long feedingScheduleId = -1;
-	
-	private FeedingSchedule feedingSchedule = new FeedingSchedule();
+	private FeedingSchedule feedingSchedule = null;
 	
 	public Animal(){}
 
@@ -148,27 +146,18 @@ public class Animal{
 		this.healthStatus = healthStatus;
 	}
 	
-	public long getFeedingScheduleId() {
-		return feedingScheduleId;
-	}
-	
-	public void setFeedingScheduleId(long feedingScheduleId) {
-		this.feedingScheduleId = feedingScheduleId;
-	}
-	
 	public FeedingSchedule getFeedingSchedule() {
 		return feedingSchedule;
 	}
 	
 	public void setFeedingSchedule(FeedingSchedule feedingSchedule) {
 		this.feedingSchedule = feedingSchedule;
-		this.feedingScheduleId = feedingSchedule.getScheduleId();
 	}
 
 	@Override
 	public String toString() {
 		String fsText = "none";
-		if(feedingScheduleId != -1) {
+		if(feedingSchedule != null) {
 			fsText = feedingSchedule.toString();
 		}
 		return "Animal [animalID=" + animalID + ", name=" + name + ", taxKingdom=" + taxKingdom + ", taxPhylum="
@@ -177,6 +166,25 @@ public class Animal{
 				+ ", type=" + type + ", healthStatus=" + healthStatus + ", feedingSchedule=" + fsText + "]";
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) 
+			return false;
+		if (!this.getClass().equals(obj.getClass())) 
+			return false;
+		
+		Animal obj2 = (Animal)obj;
+		if(this.animalID == obj2.getAnimalID()) {
+			return true;
+		}
+		return false;
+	}
 	
+	@Override
+	public int hashCode() {
+		int tmp = 0;
+		tmp = ( this.animalID + name + taxSpecies ).hashCode();
+		return tmp;
+	}
 	
 }

@@ -1,5 +1,8 @@
 package com.kluceycose.ezoo.model;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 public class FeedingSchedule {
 	private long scheduleId = -1L;
 	private String feedingTime = "";
@@ -7,7 +10,8 @@ public class FeedingSchedule {
 	private String food = "";
 	private String notes = "";
 	private String name = "None";
-	
+	private Set<Animal> assignedAnimals = new TreeSet<>();
+
 	public FeedingSchedule(){}
 	
 	public FeedingSchedule(long scheduleID, String feedingTime, String recurrence, String food, String notes, String name){
@@ -48,6 +52,10 @@ public class FeedingSchedule {
 		this.name = name;
 	}
 	
+	public void setAssignedAnimals(Set<Animal> assignedAnimals) {
+		this.assignedAnimals = assignedAnimals;
+	}
+	
 	/***********/
 	/* GETTERS */
 	/***********/
@@ -76,9 +84,17 @@ public class FeedingSchedule {
 		return name;
 	}
 	
+	public Set<Animal> getAssignedAnimals() {
+		return assignedAnimals;
+	}
+	
 	@Override
 	public String toString() {
+		String aaText = "none";
+		if(!assignedAnimals.isEmpty()) {
+			aaText = assignedAnimals.toString();
+		}
 		return "Feeding Schedule [scheduleId: " + scheduleId + ", name: " + name + ", feedingTime: " + feedingTime + ", recurrence: "
-				+ recurrence + ", food: " + food + ", notes: " + notes + "]";
+				+ recurrence + ", food: " + food + ", notes: " + notes + "assigned animals: " + aaText + "]";
 	}
 }
