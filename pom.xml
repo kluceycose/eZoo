@@ -28,7 +28,7 @@
   </build>
   <properties>
   	<org.apache.logging.log4j.version>2.13.3</org.apache.logging.log4j.version>
-  	<org.hibernate.version>5.4.17.Final</org.hibernate.version>
+  	<org.hibernate.version>5.4.24.Final</org.hibernate.version>
     <org.springframework.version>5.2.6.RELEASE</org.springframework.version>
     <spring-security.version>5.3.3.RELEASE</spring-security.version>
   </properties>
